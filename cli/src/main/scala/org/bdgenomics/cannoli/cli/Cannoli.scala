@@ -33,6 +33,7 @@ object Cannoli {
     Bowtie2,
     Bwa,
     Freebayes,
+    Snap,
     SnpEff)),
     CommandGroup("CANNOLI TOOLS", List(InterleaveFastq,
       SampleReads)))
