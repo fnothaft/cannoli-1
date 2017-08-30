@@ -23,7 +23,6 @@ import org.bdgenomics.adam.rdd.ADAMContext._
 import org.bdgenomics.adam.rdd.ADAMSaveAnyArgs
 import org.bdgenomics.adam.rdd.fragment.{ FragmentRDD, InterleavedFASTQInFormatter }
 import org.bdgenomics.adam.rdd.read.{ AlignmentRecordRDD, AnySAMOutFormatter }
-import org.bdgenomics.cannoli.util.AppendSuffixes
 import org.bdgenomics.formats.avro.AlignmentRecord
 import org.bdgenomics.utils.cli._
 import org.bdgenomics.utils.misc.Logging
@@ -87,8 +86,10 @@ class Snap(protected val args: SnapArgs) extends BDGSparkCommand[SnapArgs] with 
   val stringency: ValidationStringency = ValidationStringency.valueOf(args.stringency)
 
   def run(sc: SparkContext) {
+    // SNAP validates the read suffixes when reading interleaved FASTQ
+    sc.hadoopConfiguration.setBoolean(FragmentRDD.WRITE_SUFFIXES, true)
+
     val input: FragmentRDD = sc.loadFragments(args.inputPath)
-      .transform(AppendSuffixes(_))
 
     implicit val tFormatter = InterleavedFASTQInFormatter
     implicit val uFormatter = new AnySAMOutFormatter
