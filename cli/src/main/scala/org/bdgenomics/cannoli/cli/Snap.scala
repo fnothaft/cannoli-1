@@ -92,7 +92,8 @@ class Snap(protected val args: SnapArgs) extends BDGSparkCommand[SnapArgs] with 
     val input: FragmentRDD = sc.loadFragments(args.inputPath)
 
     implicit val tFormatter = InterleavedFASTQInFormatter
-    implicit val uFormatter = new AnySAMOutFormatter
+    implicit val uFormatter = new AnySAMOutFormatter(
+      stringency = ValidationStringency.LENIENT)
 
     val command = Seq(args.snapPath,
       "paired",
